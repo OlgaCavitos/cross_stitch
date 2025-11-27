@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Мої розрахунки{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">Мої розрахунки</h2>
+
+    {% if calculations %}
+        <ul class="list-group">
+            {% for calc in calculations %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>Розрахунок №{{ calc.number }}</strong><br>
+                        {% if calc.comment %}
+                            <small class="text-muted">{{ calc.comment }}</small>
+                        {% endif %}
+                        <br>
+                        <small class="text-secondary">Створено: {{ calc.created_at|date:"d.m.Y H:i" }}</small>
+                    </div>
+                    <div>
+                        <a href="{% url 'calculation_delete' calc.pk %}" 
+                           class="btn btn-sm btn-danger"
+                           onclick="return confirm('Ви впевнені, що хочете видалити цей розрахунок?');">
+                           Видалити
+                        </a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <div class="alert alert-info text-center">
+            У вас ще немає збережених розрахунків.
+        </div>
+    {% endif %}
+
+    <div class="mt-4 text-center">
+        <a href="{% url 'calculation_create' %}" class="btn btn-success">Додати новий розрахунок</a>
+    </div>
+</div>
+{% endblock %}

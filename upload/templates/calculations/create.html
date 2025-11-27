@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Новий розрахунок{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">Додати новий розрахунок</h2>
+
+    <div class="card shadow">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label for="id_number" class="form-label">Номер розрахунку</label>
+                    {{ form.number }}
+                    {{ form.number.errors }}
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_comment" class="form-label">Коментар</label>
+                    {{ form.comment }}
+                    {{ form.comment.errors }}
+                </div>
+
+                <button type="submit" class="btn btn-success w-100">Зберегти</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="mt-3 text-center">
+        <a href="{% url 'calculation_list' %}" class="btn btn-secondary">Повернутися до списку</a>
+    </div>
+</div>
+{% endblock %}

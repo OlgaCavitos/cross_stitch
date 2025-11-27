@@ -1,0 +1,16 @@
+<h2>Розрахунок канви</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Розрахувати</button>
+</form>
+
+{% if result %}
+  <h3>Результати:</h3>
+  <table border="1">
+    <tr><th>Тип канви</th><td>{{ result.canvas_type }}</td></tr>
+    <tr><th>Розмір схеми (см)</th><td>{{ result.scheme_size_cm.0 }} × {{ result.scheme_size_cm.1 }}</td></tr>
+    <tr><th>Фінальний розмір (см)</th><td>{{ result.final_size_cm.0 }} × {{ result.final_size_cm.1 }}</td></tr>
+    <tr><th>Довжина ниток (см)</th><td>{{ result.thread_length_cm }}</td></tr>
+  </table>
+{% endif %}
