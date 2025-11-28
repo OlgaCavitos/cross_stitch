@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Деталі розрахунку{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <h2 class="text-center mb-4">Деталі розрахунку</h2>
+
+  <div class="card p-4 shadow-sm">
+    <p><strong>Номер:</strong> {{ calculation.number }}</p>
+    <p><strong>Коментар:</strong>
+      {% if calculation.comment %}
+        {{ calculation.comment }}
+      {% else %}
+        (немає)
+      {% endif %}
+    </p>
+    <p><strong>Результат:</strong> {{ calculation.result }}</p>
+    <p><strong>Дата створення:</strong> {{ calculation.created_at }}</p>
+  </div>
+
+  <div class="mt-4 text-center">
+    <a href="{% url 'calculation_list' %}" class="btn btn-secondary">Назад до списку</a>
+    <a href="{% url 'calculation_edit' calculation.pk %}" class="btn btn-primary">Редагувати</a>
+    <a href="{% url 'calculation_delete' calculation.pk %}" class="btn btn-danger">Видалити</a>
+  </div>
+</div>
+{% endblock %}

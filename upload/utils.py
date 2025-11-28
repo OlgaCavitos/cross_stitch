@@ -1,9 +1,10 @@
 from PIL import Image
 import numpy as np
 import webcolors
+from collections import Counter
 
 # Українські переклади CSS назв
-UA_COLOR_NAMES = {
+ua_color_names = {
     "white": "білий",
     "black": "чорний",
     "gray": "сірий",
@@ -32,8 +33,7 @@ UA_COLOR_NAMES = {
     "teal": "бірюзовий",
 }
 
-# Запасний набір назв HEX (мінімальний, щоб завжди були варіанти)
-UA_HEX_PALETTE = {
+ua_hex_palette = {
     "white": "#ffffff",
     "black": "#000000",
     "gray": "#808080",
@@ -63,18 +63,15 @@ UA_HEX_PALETTE = {
 }
 
 def closest_color_name(rgb_tuple):
-    # 1) Спроба точного зіставлення
     try:
         exact_name = webcolors.rgb_to_name(rgb_tuple)
-        return UA_COLOR_NAMES.get(exact_name, exact_name)
+        return ua_color_names.get(exact_name, exact_name)
     except ValueError:
         pass
 
-    # Кандидати назв HEX: з webcolors або наш запасний словник
     css_dict = getattr(webcolors, "CSS3_NAMES_TO_HEX", None)
-    candidates = css_dict if isinstance(css_dict, dict) and css_dict else UA_HEX_PALETTE
+    candidates = css_dict if isinstance(css_dict, dict) and css_dict else ua_hex_palette
 
-    # Пошук найближчого кольору
     min_dist = None
     best_name = None
     for name, hex_value in candidates.items():
@@ -82,18 +79,16 @@ def closest_color_name(rgb_tuple):
             r_c, g_c, b_c = webcolors.hex_to_rgb(hex_value)
         except Exception:
             continue
-        # перетворення до int
         r, g, b = (int(rgb_tuple[0]), int(rgb_tuple[1]), int(rgb_tuple[2]))
         dist = (r_c - r) ** 2 + (g_c - g) ** 2 + (b_c - b) ** 2
         if min_dist is None or dist < min_dist:
             min_dist = dist
             best_name = name
 
-    # Якщо не знайшли (виключний випадок) — повертаємо RGB
     if best_name is None:
         return f"RGB{rgb_tuple}"
 
-    return UA_COLOR_NAMES.get(best_name, best_name)
+    return ua_color_names.get(best_name, best_name)
 
 def pixelize_and_count(input_path, output_path, max_colors=30):
     im = Image.open(input_path)
@@ -103,24 +98,23 @@ def pixelize_and_count(input_path, output_path, max_colors=30):
     im_quantized.save(output_path)
 
     pixels = np.array(im_quantized)
-    # якщо зображення порожнє або некоректне
     if pixels.size == 0:
         return {}, 0.0
 
-    unique_colors, counts = np.unique(pixels.reshape(-1, 3), axis=0, return_counts=True)
+    pixel_list = [tuple(color) for row in pixels for color in row]
+    color_counts = Counter(pixel_list)
 
     result = {}
     total_thread_length = 0.0
 
-    for color, count in zip(unique_colors, counts):
-        thread_length = count * 0.18  # см нитки на піксель (коефіцієнт)
+    for color, count in color_counts.items():
+        thread_length = count * 0.18  # см нитки на піксель
         total_thread_length += thread_length
-        color_name = closest_color_name(tuple(color))
+        color_name = closest_color_name(color)
         result[color_name] = result.get(color_name, 0.0) + thread_length
 
-    # Округлення фінальних значень і сортування
+    # Округлення і сортування
     result = {k: round(v, 1) for k, v in result.items()}
     result = dict(sorted(result.items(), key=lambda item: item[1], reverse=True))
 
     return result, round(total_thread_length, 1)
-

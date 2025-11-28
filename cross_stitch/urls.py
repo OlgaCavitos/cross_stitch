@@ -26,8 +26,7 @@ from upload.views import upload_and_calculate
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('upload/', include('upload.urls')),
-    path('', upload_and_calculate, name='home'),  #
+    path('', include('upload.urls')),
 ]
 
 if settings.DEBUG:

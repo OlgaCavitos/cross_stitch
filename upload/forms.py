@@ -1,5 +1,5 @@
 from django import forms
-from .models import UploadedImage
+from .models import UploadedImage, Feedback
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
@@ -68,4 +68,15 @@ from .models import Calculation
 class CalculationForm(forms.ModelForm):
     class Meta:
         model = Calculation
-        fields = ['number', 'comment']
+        fields = ["number", "user", "comment", "result"]
+
+
+
+class FeedbackForm(forms.ModelForm):
+    class Meta:
+        model = Feedback
+        fields = ['name', 'comment']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ваше ім’я'}),
+            'comment': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Ваш коментар'}),
+        }

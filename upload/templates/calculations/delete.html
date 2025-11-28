@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Видалити розрахунок</h2>
+
+    <p>Ви впевнені, що хочете видалити цей розрахунок?</p>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <p><strong>ID:</strong> {{ object.id }}</p>
+            <p><strong>Номер:</strong> {{ object.number }}</p>
+            <p><strong>Коментар:</strong> {{ object.comment }}</p>
+            <p><strong>Результат:</strong> {{ object.result }}</p>
+        </div>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Так, видалити</button>
+        <a href="{% url 'calculation_list' %}" class="btn btn-secondary">Скасувати</a>
+    </form>
+</div>
+{% endblock %}

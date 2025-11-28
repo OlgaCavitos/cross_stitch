@@ -13,18 +13,24 @@
                     <div>
                         <strong>Розрахунок №{{ calc.number }}</strong><br>
                         {% if calc.comment %}
-                            <small class="text-muted">{{ calc.comment }}</small>
+                            <small class="text-muted">{{ calc.comment }}</small><br>
                         {% endif %}
-                        <br>
-                        <small class="text-secondary">Створено: {{ calc.created_at|date:"d.m.Y H:i" }}</small>
+                        <small class="text-secondary">Створено: {{ calc.created_at|date:"d.m.Y H:i" }}</small><br>
+                        <span class="fw-bold">Результат:</span> {{ calc.result }}
                     </div>
                     <div>
-                        <a href="{% url 'calculation_delete' calc.pk %}" 
-                           class="btn btn-sm btn-danger"
-                           onclick="return confirm('Ви впевнені, що хочете видалити цей розрахунок?');">
-                           Видалити
-                        </a>
-                    </div>
+    <a href="{% url 'calculation_detail' calc.pk %}"
+       class="btn btn-sm btn-info">Деталі</a>
+
+    <a href="{% url 'calculation_edit' calc.pk %}"
+       class="btn btn-sm btn-warning">Редагувати</a>
+
+    <a href="{% url 'calculation_delete' calc.pk %}"
+       class="btn btn-sm btn-danger"
+       onclick="return confirm('Ви впевнені, що хочете видалити цей розрахунок?');">
+       Видалити
+    </a>
+</div>
                 </li>
             {% endfor %}
         </ul>

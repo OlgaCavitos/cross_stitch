@@ -1,15 +1,15 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Завантаження та розрахунок канви{% endblock %}
+{% block title %}Калькулятор кольорів для вишивки хрестиком{% endblock %}
 
 {% block content %}
 <div class="container py-5">
-  <h2 class="mb-4 text-center">Завантаження зображення та розрахунок канви</h2>
+  <h2 class="mb-4 text-center">Калькулятор кольорів для вишивки хрестиком</h2>
 
-    {# # Форма ##}
+  {# Форма завантаження та розрахунку #}
   <form method="post" enctype="multipart/form-data" class="card p-4 shadow-sm">
     {% csrf_token %}
-
     <div class="mb-3">
       <h5 class="card-title">Завантаження файлу</h5>
       {% for field in upload_form %}
@@ -39,7 +39,7 @@
     <button type="submit" class="btn btn-primary w-100">Виконати</button>
   </form>
 
-  {#  Оригінальне та піксельне зображення #}
+  {# Оригінальне та піксельне зображення #}
   {% if uploaded_image %}
     <div class="row mt-5">
       <div class="col-md-6">
@@ -55,20 +55,37 @@
     </div>
   {% endif %}
 
-  {# #  Розрахунок кольорів #}
+  {# Розрахунок кольорів #}
   {% if colors_stats %}
-  <div class="mt-5">
-    <h3>Розрахунок кольорів:</h3>
-    <ul class="list-group">
-      {% for color, length in colors_stats.items %}
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-          {{ color }}
-          <span class="badge bg-primary rounded-pill">{{ length }} см</span>
-        </li>
-      {% endfor %}
-    </ul>
-    <p class="mt-3"><strong>Загальна довжина ниток:</strong> {{ total_thread_length }} см</p>
-  </div>
+    <div class="mt-5">
+      <h3>Розрахунок кольорів:</h3>
+      <ul class="list-group">
+        {% for color, length in colors_stats.items %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            {{ color }}
+            <span class="badge bg-primary rounded-pill">{{ length }} см</span>
+          </li>
+        {% endfor %}
+      </ul>
+      <p class="mt-3"><strong>Загальна довжина ниток:</strong> {{ total_thread_length }} см</p>
+    </div>
   {% endif %}
+
+  {# Кнопки доступні #}
+  <div class="mt-4 text-center">
+  <a href="{% url 'calculation_list' %}" class="btn btn-success me-2">
+    Перейти у меню розрахунків
+  </a>
+  <a href="{% url 'feedback' %}" class="btn btn-secondary">
+    Залишити відгук
+  </a>
 </div>
+</div>
+
+{# Фіксовані картинки у кутах сторінки #}
+<img src="{% static 'upload/images/pic5.png' %}" alt="Pic1" class="corner-pic top-left">
+<img src="{% static 'upload/images/pic2.png' %}" alt="Pic2" class="corner-pic top-right">
+<img src="{% static 'upload/images/pic3.png' %}" alt="Pic3" class="corner-pic bottom-left">
+<img src="{% static 'upload/images/pic4.png' %}" alt="Pic4" class="corner-pic bottom-right">
 {% endblock %}
+
